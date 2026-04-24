@@ -1,0 +1,34 @@
+created:
+    - database/factories/UserFactory.php
+    - database/factories/CustomerFactory.php
+    - database/factories/SupplierFactory.php
+    - database/factories/ProductFactory.php
+    - database/factories/ProductPurchaseFactory.php
+    - database/factories/ProductConsumptionFactory.php
+    - database/factories/RevenueFactory.php
+    - database/factories/ExpenseFactory.php
+    - database/migrations/2026_04_24_191420_create_users_table.php
+    - database/migrations/2026_04_24_191421_create_customers_table.php
+    - database/migrations/2026_04_24_191422_create_suppliers_table.php
+    - database/migrations/2026_04_24_191423_create_products_table.php
+    - database/migrations/2026_04_24_191424_create_product_purchases_table.php
+    - database/migrations/2026_04_24_191425_create_product_consumptions_table.php
+    - database/migrations/2026_04_24_191426_create_revenues_table.php
+    - database/migrations/2026_04_24_191427_create_expenses_table.php
+    - app/Models/User.php
+    - app/Models/Customer.php
+    - app/Models/Supplier.php
+    - app/Models/Product.php
+    - app/Models/ProductPurchase.php
+    - app/Models/ProductConsumption.php
+    - app/Models/Revenue.php
+    - app/Models/Expense.php
+models:
+    User: { name: string, email: 'string unique', password: password, role: 'enum:admin,operator default:operator', softdeletes: softDeletes }
+    Customer: { name: string, cpf_cnpj: 'string unique', birth_date: 'date nullable', phone: string, zip_code: 'string:8', street: string, neighborhood: string, number: string, complement: 'string nullable', city: string, state: 'string:2', is_active: 'boolean default:true', softdeletes: softDeletes, relationships: { hasMany: Revenue } }
+    Supplier: { name: string, cpf_cnpj: 'string unique', phone: string, zip_code: 'string:8', street: string, neighborhood: string, number: string, complement: 'string nullable', city: string, state: 'string:2', is_active: 'boolean default:true', softdeletes: softDeletes, relationships: { hasMany: 'Expense, ProductPurchase' } }
+    Product: { name: string, quantity: 'integer default:0', batch: 'string nullable', expiration_date: 'date nullable', unit_cost: 'decimal:10,2 nullable', softdeletes: softDeletes }
+    ProductPurchase: { product_id: 'id:product', supplier_id: 'id:supplier', quantity: integer, total_cost: 'decimal:10,2', purchase_date: date, user_id: 'id:user', softdeletes: softDeletes }
+    ProductConsumption: { product_id: 'id:product', quantity: integer, consumption_date: date, reason: 'string nullable', user_id: 'id:user', softdeletes: softDeletes }
+    Revenue: { customer_id: 'id:customer', total_amount: 'decimal:10,2', installments: 'integer default:1', installment_amount: 'decimal:10,2', payment_plan: string, status: 'enum:pending,paid default:pending', softdeletes: softDeletes }
+    Expense: { supplier_id: 'id:supplier nullable', total_amount: 'decimal:10,2', installments: 'integer default:1', installment_amount: 'decimal:10,2', payment_plan: string, category: 'enum:product_purchase,supplier_payment,operational_expense,others', status: 'enum:pending,paid default:pending', softdeletes: softDeletes }

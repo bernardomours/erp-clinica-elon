@@ -1,0 +1,84 @@
+models:
+  User:
+    name: string
+    email: string unique
+    password: password
+    role: enum:admin,operator default:operator
+    softDeletes: true
+
+  Customer:
+    name: string
+    cpf_cnpj: string unique
+    birth_date: date nullable
+    phone: string
+    zip_code: string:8
+    street: string
+    neighborhood: string
+    number: string
+    complement: string nullable
+    city: string
+    state: string:2
+    is_active: boolean default:true
+    softDeletes: true
+    relationships:
+      hasMany: Revenue
+
+  Supplier:
+    name: string
+    cpf_cnpj: string unique
+    phone: string
+    zip_code: string:8
+    street: string
+    neighborhood: string
+    number: string
+    complement: string nullable
+    city: string
+    state: string:2
+    is_active: boolean default:true
+    softDeletes: true
+    relationships:
+      hasMany: Expense, ProductPurchase
+
+  Product:
+    name: string
+    quantity: integer default:0
+    batch: string nullable # Lote
+    expiration_date: date nullable # Validade
+    unit_cost: decimal:10,2 nullable
+    softDeletes: true
+
+  ProductPurchase:
+    product_id: id:product
+    supplier_id: id:supplier
+    quantity: integer
+    total_cost: decimal:10,2
+    purchase_date: date
+    user_id: id:user
+    softDeletes: true
+
+  ProductConsumption:
+    product_id: id:product
+    quantity: integer
+    consumption_date: date
+    reason: string nullable
+    user_id: id:user
+    softDeletes: true
+
+  Revenue:
+    customer_id: id:customer
+    total_amount: decimal:10,2
+    installments: integer default:1
+    installment_amount: decimal:10,2
+    payment_plan: string
+    status: enum:pending,paid default:pending
+    softDeletes: true
+
+  Expense:
+    supplier_id: id:supplier nullable
+    total_amount: decimal:10,2
+    installments: integer default:1 #parcelas
+    installment_amount: decimal:10,2 #quantidade de parcelas
+    payment_plan: string
+    category: enum:product_purchase,supplier_payment,operational_expense,others
+    status: enum:pending,paid default:pending
+    softDeletes: true
