@@ -3,12 +3,19 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Filament\Models\Contracts\HasTenants;
+use Filament\Panel;
+use Illuminate\Database\Eloquent\Model;
+use Filament\Models\Contracts\FilamentUser;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Collection;
 
-class User extends Model
+class User extends Authenticatable implements HasTenants, FilamentUser
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -29,6 +36,7 @@ class User extends Model
      */
     protected $hidden = [
         'password',
+        'remember_token',
     ];
 
     /**
@@ -40,6 +48,36 @@ class User extends Model
     {
         return [
             'id' => 'integer',
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',         
         ];
+    }
+
+    public function clinics()
+    {
+        return $this->belongsToMany(Clinic::class);
+    }
+    
+    public function getTenants(Panel $panel): array|Collection
+    {
+        return $this->clinics;
+    }
+
+    public function canAccessTenant(Model $tenant): bool
+    {
+        return $this->clinics->contains($tenant);
+    }
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        if ($panel->getId() === 'admin') {
+            return $this->role === 'admin';
+        }
+
+        if ($panel->getId() === 'app') {
+            return true;
+        }
+
+        return false;
     }
 }

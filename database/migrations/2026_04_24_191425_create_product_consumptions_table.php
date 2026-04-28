@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('product_consumptions', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('clinic_id')->constrained()->cascadeOnDelete();
             $table->foreignId('product_id');
             $table->integer('quantity');
             $table->date('consumption_date');

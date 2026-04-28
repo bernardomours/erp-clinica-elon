@@ -17,6 +17,7 @@ class ProductConsumption extends Model
      * @var array
      */
     protected $fillable = [
+        'clinic_id',
         'product_id',
         'quantity',
         'consumption_date',

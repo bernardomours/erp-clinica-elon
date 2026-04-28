@@ -17,6 +17,7 @@ class ProductPurchase extends Model
      * @var array
      */
     protected $fillable = [
+        'clinic_id',
         'product_id',
         'supplier_id',
         'quantity',

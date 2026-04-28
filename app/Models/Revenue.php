@@ -17,6 +17,7 @@ class Revenue extends Model
      * @var array
      */
     protected $fillable = [
+        'clinic_id',
         'customer_id',
         'total_amount',
         'installments',

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -17,10 +18,12 @@ class Customer extends Model
      * @var array
      */
     protected $fillable = [
+        'clinic_id',
         'name',
         'cpf_cnpj',
         'birth_date',
         'phone',
+        'email',
         'zip_code',
         'street',
         'neighborhood',
@@ -43,6 +46,11 @@ class Customer extends Model
             'birth_date' => 'date',
             'is_active' => 'boolean',
         ];
+    }
+
+    public function clinic(): BelongsTo
+    {
+        return $this->belongsTo(Clinic::class);
     }
 
     public function revenues(): HasMany
