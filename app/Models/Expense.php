@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\BelongsToClinic;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,39 +12,45 @@ class Expense extends Model
 {
     use HasFactory, SoftDeletes;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = [
         'clinic_id',
         'supplier_id',
+        'financial_category_id', // Novo relacionamento
+        'description',           // Novo
+        'due_date',              // Novo
+        'payment_date',          // Novo
         'total_amount',
         'installments',
         'installment_amount',
         'payment_plan',
-        'category',
         'status',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
             'id' => 'integer',
             'supplier_id' => 'integer',
+            'financial_category_id' => 'integer',
             'total_amount' => 'decimal:2',
             'installment_amount' => 'decimal:2',
+            'due_date' => 'date',
+            'payment_date' => 'date',
         ];
+    }
+
+    public function clinic(): BelongsTo
+    {
+        return $this->belongsTo(Clinic::class);
     }
 
     public function supplier(): BelongsTo
     {
         return $this->belongsTo(Supplier::class);
+    }
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(FinancialCategory::class, 'financial_category_id');
     }
 }

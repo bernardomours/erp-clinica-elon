@@ -7,6 +7,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Schemas\Schema;
+use Illuminate\Database\Eloquent\Builder;
 
 class PatientScheduleForm
 {
@@ -25,6 +26,25 @@ class PatientScheduleForm
                     ->searchable()
                     ->preload()
                     ->required(),
+                Select::make('procedure_id')
+                    ->relationship(
+                        name: 'procedure',
+                        titleAttribute: 'name',
+                        modifyQueryUsing: function (Builder $query) {
+                            $tenant = filament()->getTenant();
+                            
+                            if ($tenant) {
+                                return $query->where('clinic_id', $tenant->id);
+                            }
+                            
+                            return $query;
+                        }
+                    )
+                    ->label('Procedimento')
+                    ->searchable()
+                    ->preload()
+                    ->placeholder('Selecione um procedimento')
+                    ->columnSpanFull(),
                 DateTimePicker::make('schedule_date')
                     ->label('Data e Hora')
                     ->required()

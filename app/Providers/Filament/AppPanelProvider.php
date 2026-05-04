@@ -4,6 +4,8 @@ namespace App\Providers\Filament;
 
 use App\Filament\Resources\Customers\CustomerResource;
 use App\Filament\Resources\PatientSchedules\PatientScheduleResource;
+use App\Filament\Resources\Revenues\RevenueResource;
+use App\Filament\Resources\FinancialCategories\FinancialCategoryResource;
 use App\Filament\Resources\Patients\Pages\PatientSchedule;
 use App\Models\Clinic;
 use Filament\Http\Middleware\Authenticate;
@@ -25,6 +27,10 @@ use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use App\Filament\Pages\ExpensesDashboard;
+use App\Filament\Resources\Procedures\ProcedureResource;
+use App\Filament\Widgets\ProximasConsultasWidget;
+use App\Models\Revenue;
 
 class AppPanelProvider extends PanelProvider
 {
@@ -41,16 +47,21 @@ class AppPanelProvider extends PanelProvider
             ->resources([
                 CustomerResource::class,
                 PatientScheduleResource::class,
+                RevenueResource::class,
+                FinancialCategoryResource::class,
+                ProcedureResource::class,
             ])
 
             ->discoverPages(in: app_path('Filament/App/Pages'), for: 'App\\Filament\\App\\Pages')
             ->pages([
                 Dashboard::class,
+                ExpensesDashboard::class,
             ])
             ->discoverWidgets(in: app_path('Filament/App/Widgets'), for: 'App\\Filament\\App\\Widgets')
             ->widgets([
                 // AccountWidget::class,
                 // FilamentInfoWidget::class,
+                ProximasConsultasWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
@@ -67,14 +78,12 @@ class AppPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             
-            // 3. A MÁGICA DA BLINDAGEM (Tenancy)
             ->tenant(Clinic::class, slugAttribute: 'slug') 
             ->tenantRoutePrefix('consultorio')
             ->tenantMenuItems([
                 MenuItem::make()
                     ->label('Ver minha equipe')
                     ->icon('heroicon-m-users')
-                    // O truque: Executar o JS direto no atributo href (url) do link
                     ->url("#ver-equipe"),
             ])
             ->renderHook(

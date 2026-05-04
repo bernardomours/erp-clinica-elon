@@ -18,7 +18,10 @@ class PatientScheduleResource extends Resource
 {
     protected static ?string $model = PatientSchedule::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static ?string $modelLabel = 'Agendamento';
+    protected static ?string $pluralModelLabel = 'Agendamentos  ';
+    protected static ?string $navigationLabel = 'Agendamentos';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-calendar-days';
 
     protected static ?string $recordTitleAttribute = 'name';
 
@@ -37,6 +40,24 @@ class PatientScheduleResource extends Resource
         return [
             //
         ];
+    }
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        if (filament()->getCurrentPanel()->getId() === 'admin') {
+            return true;
+        }
+
+        return (bool) filament()->getTenant()?->has_scheduling;
+    }
+
+    public static function canViewAny(): bool
+    {
+        if (filament()->getCurrentPanel()->getId() === 'admin') {
+            return true;
+        }
+        
+        return (bool) filament()->getTenant()?->has_scheduling;
     }
 
     public static function getPages(): array

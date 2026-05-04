@@ -9,6 +9,7 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Grid;
 use Filament\Forms\Components\DatePicker;
 use Illuminate\Support\Str;
+use Filament\Forms\Components\Toggle;
 use Illuminate\Support\Facades\Http;
 
 class ClinicForm
@@ -91,6 +92,22 @@ class ClinicForm
                         TextInput::make('complement')->label('Complemento'),
                     ]),
                 ]),
+
+                Section::make('Módulos Contratados')
+                    ->description('Ative ou desative o acesso da clínica aos módulos do sistema.')
+                    ->schema([
+                        Toggle::make('has_scheduling')
+                            ->label('Módulo de Agendamento (Agenda e Pacientes)')
+                            ->onColor('success')
+                            ->offColor('danger')
+                            ->default(true),
+
+                        Toggle::make('has_financial')
+                            ->label('Módulo Financeiro (Receitas, Despesas e Relatórios)')
+                            ->onColor('success')
+                            ->offColor('danger')
+                            ->default(false),
+                    ])->columns(2),
         ]);
     }
 }

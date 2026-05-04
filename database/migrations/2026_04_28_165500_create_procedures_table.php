@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('patient_schedules', function (Blueprint $table) {
+        Schema::create('procedures', function (Blueprint $table) {
             $table->id();
             $table->foreignId('clinic_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('customer_id')->constrained()->cascadeOnDelete();
-            $table->dateTime('schedule_date');
-            $table->enum('status', ["Scheduled","Confirmed","Completed", "Cancelled"])->default('Scheduled'); 
-            $table->text('notes')->nullable(); 
+            $table->string('name');
+            $table->decimal('base_price', 10, 2);
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('patient_schedules');
+        Schema::dropIfExists('procedures');
     }
 };

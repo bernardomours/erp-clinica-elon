@@ -10,8 +10,8 @@ class PatientSchedule extends Model
     protected $fillable = [
         'clinic_id',
         'customer_id',
+        'procedure_id',
         'schedule_date',
-        'procedure',
         'notes',
         'status',
     ];
@@ -28,5 +28,10 @@ class PatientSchedule extends Model
     public function clinic(): BelongsTo
     {
         return $this->belongsTo(Clinic::class);
+    }
+
+    public function procedure(): BelongsTo
+    {
+        return $this->belongsTo(Procedure::class);
     }
 }

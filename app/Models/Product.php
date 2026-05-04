@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
@@ -18,7 +19,9 @@ class Product extends Model
     protected $fillable = [
         'clinic_id',
         'name',
-        'quantity',
+        'minimum_stock',
+        'unit',
+        'current_stock',
         'batch',
         'expiration_date',
         'unit_cost',
@@ -36,5 +39,10 @@ class Product extends Model
             'expiration_date' => 'date',
             'unit_cost' => 'decimal:2',
         ];
+    }
+
+    public function clinic(): BelongsTo
+    {
+        return $this->belongsTo(Clinic::class);
     }
 }

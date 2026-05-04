@@ -19,6 +19,8 @@ class Clinic extends Model
         'complement',
         'city',
         'state',
+        'has_scheduling',
+        'has_financial',
     ];
 
     public function users()
