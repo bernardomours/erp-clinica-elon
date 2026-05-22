@@ -13,10 +13,8 @@ class MonthlyBirthdays extends TableWidget
 {
     protected static ?string $heading = '🎂 Aniversariantes do Mês';
     
-    // Evita consultas excessivas, mas mantém o dado atualizado
     protected static ?string $pollingInterval = null;
 
-    // Ocupa metade da tela (ou 1 coluna em grids pequenos)
     protected int | string | array $columnSpan = 1;
 
     public function table(Table $table): Table
@@ -27,11 +25,10 @@ class MonthlyBirthdays extends TableWidget
             ->when($tenantId, fn (Builder $q) => $q->where('clinic_id', $tenantId))
             ->whereMonth('birth_date', Carbon::now()->month);
 
-        // 👇 A mágica multiplataforma: Deteta o banco de dados e aplica a linguagem correta
         if ($query->getConnection()->getDriverName() === 'sqlite') {
-            $query->orderByRaw("strftime('%d', birth_date) ASC"); // Para rodar no seu PC (Herd)
+            $query->orderByRaw("strftime('%d', birth_date) ASC"); 
         } else {
-            $query->orderByRaw("DAY(birth_date) ASC"); // Para rodar no Servidor (MySQL/Postgres)
+            $query->orderByRaw("DAY(birth_date) ASC");
         }
 
         return $table
