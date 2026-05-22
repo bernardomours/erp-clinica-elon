@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Supplier extends Model
 {
@@ -21,6 +22,7 @@ class Supplier extends Model
         'name',
         'cpf_cnpj',
         'phone',
+        'email',
         'zip_code',
         'street',
         'neighborhood',
@@ -47,6 +49,11 @@ class Supplier extends Model
     public function expenses(): HasMany
     {
         return $this->hasMany(Expense::class);
+    }
+
+    public function clinic(): BelongsTo
+    {
+        return $this->belongsTo(Clinic::class);
     }
 
     public function productPurchases(): HasMany

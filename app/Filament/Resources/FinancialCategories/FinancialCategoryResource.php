@@ -9,6 +9,7 @@ use App\Filament\Resources\FinancialCategories\Schemas\FinancialCategoryForm;
 use App\Filament\Resources\FinancialCategories\Tables\FinancialCategoriesTable;
 use App\Models\FinancialCategory;
 use BackedEnum;
+use UnitEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -18,7 +19,11 @@ class FinancialCategoryResource extends Resource
 {
     protected static ?string $model = FinancialCategory::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-tag';
+    protected static ?string $modelLabel = 'Classificação Financeira';
+    protected static ?string $pluralModelLabel = 'Classificação Financeira';
+    protected static string|UnitEnum|null $navigationGroup = 'Financeiro';
+    protected static ?int $navigationSort = 4;
 
     protected static ?string $recordTitleAttribute = 'name';
 

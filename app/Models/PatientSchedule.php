@@ -34,4 +34,9 @@ class PatientSchedule extends Model
     {
         return $this->belongsTo(Procedure::class);
     }
+
+    public function patientSchedules()
+    {
+        return $this->hasMany(PatientSchedule::class);
+    }
 }

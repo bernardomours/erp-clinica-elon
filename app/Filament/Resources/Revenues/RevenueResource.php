@@ -11,7 +11,7 @@ use App\Models\Revenue;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
+use UnitEnum;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -23,7 +23,9 @@ class RevenueResource extends Resource
     protected static ?string $modelLabel = 'Entrada';
     protected static ?string $pluralModelLabel = 'Entradas';
     protected static ?string $navigationLabel = 'Entradas';
+    protected static string|UnitEnum|null $navigationGroup = 'Financeiro';
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-arrow-trending-up';
+    protected static ?int $navigationSort = 1;
 
     protected static ?string $recordTitleAttribute = 'name';
 

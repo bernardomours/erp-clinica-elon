@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
@@ -39,6 +40,13 @@ class Product extends Model
             'expiration_date' => 'date',
             'unit_cost' => 'decimal:2',
         ];
+    }
+
+    public function procedures(): BelongsToMany
+    {
+        return $this->belongsToMany(Procedure::class)
+                    ->withPivot('quantity')
+                    ->withTimestamps();
     }
 
     public function clinic(): BelongsTo

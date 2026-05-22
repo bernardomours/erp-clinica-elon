@@ -57,4 +57,9 @@ class ProductPurchase extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function clinic(): BelongsTo
+    {
+        return $this->belongsTo(Clinic::class);
+    }
 }

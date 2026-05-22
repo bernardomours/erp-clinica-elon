@@ -19,6 +19,7 @@ class Revenue extends Model
     protected $fillable = [
         'clinic_id',
         'customer_id',
+        'description',
         'total_amount',
         'installments',
         'installment_amount',

@@ -74,9 +74,6 @@ class EquipeModal extends Component implements HasActions, HasForms
                         if (link && link.getAttribute('href') === '#ver-equipe') {
                             e.preventDefault(); 
                             e.stopPropagation(); 
-                            
-                            // O truque de mestre: Esperamos 100ms para o menu do Filament 
-                            // terminar de fechar antes de invocarmos a janela lateral.
                             setTimeout(() => {
                                 Livewire.dispatch('abrirModalEquipe'); 
                             }, 100);

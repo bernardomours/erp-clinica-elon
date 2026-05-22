@@ -9,6 +9,8 @@ use Illuminate\Support\Carbon;
 
 class ExpenseOverview extends BaseWidget
 {
+    protected ?string $pollingInterval = null;
+    
     protected function getStats(): array
     {
         $inicioMes = Carbon::now()->startOfMonth();

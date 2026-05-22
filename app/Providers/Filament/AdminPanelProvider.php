@@ -18,6 +18,7 @@ use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use App\Filament\Pages\Auth\CustomLogin;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -32,11 +33,18 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::hex('#014bde'),
             ])
-            ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
-            ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
+            ->brandLogo(url('/images/topbar_icon.png'))
+            ->brandLogoHeight('8rem')
+            ->brandName('OdontoFlow')
+            ->favicon(url('/images/favicon.png'))
             ->navigationGroups([
+                'Frequência',
+                'Financeiro',
+                'Estoque',
                 'Administração',
             ])
+            ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
+            ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([
                 Dashboard::class,
             ])

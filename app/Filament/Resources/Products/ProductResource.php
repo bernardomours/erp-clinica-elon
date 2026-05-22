@@ -48,7 +48,7 @@ class ProductResource extends Resource
     public static function shouldRegisterNavigation(): bool
     {
         if (filament()->getCurrentPanel()->getId() === 'admin') {
-                    return true;
+            return true;
         }
 
         return (bool) filament()->getTenant()?->has_financial;
@@ -59,7 +59,7 @@ class ProductResource extends Resource
         if (filament()->getCurrentPanel()->getId() === 'admin') {
             return true;
         }
-
+        
         return (bool) filament()->getTenant()?->has_financial;
     }
 

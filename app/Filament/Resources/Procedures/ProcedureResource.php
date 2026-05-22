@@ -9,6 +9,7 @@ use App\Filament\Resources\Procedures\Schemas\ProcedureForm;
 use App\Filament\Resources\Procedures\Tables\ProceduresTable;
 use App\Models\Procedure;
 use BackedEnum;
+use UnitEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -22,6 +23,8 @@ class ProcedureResource extends Resource
     protected static ?string $modelLabel = 'Procedimento';
     protected static ?string $pluralModelLabel = 'Procedimentos';
     protected static ?string $navigationLabel = 'Procedimentos';
+    protected static string|UnitEnum|null $navigationGroup = 'Financeiro';
+    protected static ?int $navigationSort = 3;
 
     protected static ?string $recordTitleAttribute = 'name';
 
@@ -49,5 +52,23 @@ class ProcedureResource extends Resource
             'create' => CreateProcedure::route('/create'),
             'edit' => EditProcedure::route('/{record}/edit'),
         ];
+    }
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        if (filament()->getCurrentPanel()->getId() === 'admin') {
+            return true;
+        }
+
+        return (bool) filament()->getTenant()?->has_financial;
+    }
+
+    public static function canViewAny(): bool
+    {
+        if (filament()->getCurrentPanel()->getId() === 'admin') {
+            return true;
+        }
+        
+        return (bool) filament()->getTenant()?->has_financial;
     }
 }

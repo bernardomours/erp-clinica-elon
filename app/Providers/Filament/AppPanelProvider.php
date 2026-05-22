@@ -29,39 +29,59 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use App\Filament\Pages\ExpensesDashboard;
 use App\Filament\Resources\Procedures\ProcedureResource;
+use App\Filament\Resources\ProductPurchases\ProductPurchaseResource;
+use App\Filament\Resources\Products\ProductResource;
+use App\Filament\Pages\DashboardFinanceiro;
+use App\Filament\Resources\Suppliers\SupplierResource;
 use App\Filament\Widgets\ProximasConsultasWidget;
-use App\Models\Revenue;
+use App\Filament\Pages\Auth\CustomLogin;
+use App\Filament\Widgets\MonthlyBirthdays;
 
 class AppPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
         return $panel
-            ->spa()
+            //->spa()
             ->id('app')
             ->path('app')
             ->login()
             ->colors([
                 'primary' => Color::Sky,
             ])
+            ->brandLogo(url('/images/topbar_icon.png'))
+            ->brandLogoHeight('8rem')
+            ->brandName('OdontoFlow')
+            ->favicon(url('/images/favicon.png'))
             ->resources([
                 CustomerResource::class,
                 PatientScheduleResource::class,
                 RevenueResource::class,
                 FinancialCategoryResource::class,
                 ProcedureResource::class,
+                ProductPurchaseResource::class,
+                ProductResource::class,
+                RevenueResource::class,
+                SupplierResource::class,
             ])
 
             ->discoverPages(in: app_path('Filament/App/Pages'), for: 'App\\Filament\\App\\Pages')
             ->pages([
                 Dashboard::class,
                 ExpensesDashboard::class,
+                DashboardFinanceiro::class,
             ])
             ->discoverWidgets(in: app_path('Filament/App/Widgets'), for: 'App\\Filament\\App\\Widgets')
+            ->navigationGroups([
+                'Frequência',
+                'Financeiro',
+                'Estoque',
+            ])
             ->widgets([
                 // AccountWidget::class,
                 // FilamentInfoWidget::class,
                 ProximasConsultasWidget::class,
+                MonthlyBirthdays::class,
             ])
             ->middleware([
                 EncryptCookies::class,

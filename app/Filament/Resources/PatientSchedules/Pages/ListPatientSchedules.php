@@ -8,6 +8,7 @@ use Filament\Resources\Pages\ListRecords;
 use Filament\Schemas\Components\Tabs\Tab;
 use Illuminate\Database\Eloquent\Builder;
 use Carbon\Carbon;
+use Filament\Actions\Action;
 
 class ListPatientSchedules extends ListRecords
 {
@@ -40,6 +41,14 @@ class ListPatientSchedules extends ListRecords
         return [
             CreateAction::make()
                 ->label('Registrar Agendamento'),
+
+            Action::make('emitir_recibo')
+                ->label('Emitir Recibo (Via GOV)')
+                ->icon('heroicon-o-document-arrow-up')
+                ->color('success')
+                ->url(fn () => 'https://sso.acesso.gov.br/login?client_id=www.gov.br&authorization_id=19e4b0e3ef5')
+                #->url(fn ($record) => "https://portal.gov.br/emitir?cpf={$record->patient->cpf}&valor={$record->valor}") #esse aqui é uma opção para caso dê para predefinir o cpf do paciente por exemplo
+                ->openUrlInNewTab(),
         ];
     }
 }

@@ -7,6 +7,9 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\Action;
+use Filament\Infolists\Components\RepeatableEntry;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Tables\Table;
 
 class ProceduresTable
@@ -16,23 +19,74 @@ class ProceduresTable
         return $table
             ->columns([
                 TextColumn::make('clinic.name')
-                    ->searchable(),
+                    ->label('Clínica')
+                    ->searchable()
+                    ->sortable()
+                    ->visible(fn () => filament()->getCurrentPanel()->getId() === 'admin'),
+
                 TextColumn::make('name')
-                    ->searchable(),
+                    ->label('Procedimento')
+                    ->searchable()
+                    ->sortable()
+                    ->weight('bold'),
+
                 TextColumn::make('base_price')
-                    ->money()
-                    ->sortable(),
+                    ->label('Preço Base')
+                    ->money('BRL')
+                    ->sortable()
+                    ->color('success')
+                    ->weight('bold'),
+
+                TextColumn::make('materiais_list')
+                    ->label('Materiais (Receita)')
+                    ->getStateUsing(fn ($record) => $record->procedureProducts()->count() . ' item(ns)')
+                    ->badge()
+                    ->color('info')
+                    ->icon('heroicon-o-eye')
+                    ->action(
+                        Action::make('view_materials')
+                            ->modalHeading(fn ($record) => 'Procedimento: ' . $record->name)
+                            ->modalDescription('Lista de materiais consumidos automaticamente por este procedimento.')
+                            ->modalSubmitAction(false)
+                            ->modalCancelActionLabel('Fechar')
+                            ->infolist([
+                                RepeatableEntry::make('procedureProducts')
+                                    ->label('Produto | Quantidade')
+                                    ->schema([
+                                        TextEntry::make('product.name')
+                                            ->label('Material / Produto')
+                                            ->weight('bold'),
+                                            
+                                        TextEntry::make('quantity')
+                                            ->label('Quantidade Gasta')
+                                            ->badge()
+                                            ->color('warning'),
+                                    ])
+                                    ->columns(2)
+                            ])
+                    ),
+
                 IconColumn::make('is_active')
-                    ->boolean(),
+                    ->label('Status')
+                    ->boolean()
+                    ->trueIcon('heroicon-o-check-badge')
+                    ->falseIcon('heroicon-o-x-circle')
+                    ->trueColor('success')
+                    ->falseColor('danger'),
+
                 TextColumn::make('created_at')
-                    ->dateTime()
+                    ->label('Criado em')
+                    ->dateTime('d/m/Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->label('Atualizado em')
+                    ->dateTime('d/m/Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->defaultSort('name', 'asc')
             ->filters([
                 //
             ])

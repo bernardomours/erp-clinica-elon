@@ -11,6 +11,7 @@ use Filament\Widgets\TableWidget as BaseWidget;
 class ProximasConsultasWidget extends BaseWidget
 {
     protected static ?string $heading = 'Próximos Lembretes de Consulta';
+    protected ?string $pollingInterval = null;
 
     protected int | string | array $columnSpan = 'full';
 
@@ -36,7 +37,14 @@ class ProximasConsultasWidget extends BaseWidget
                     ->label('Paciente'),
 
                 TextColumn::make('status')
+                    ->label('Status') 
                     ->badge()
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'Scheduled' => 'Agendado',
+                        'Confirmed' => 'Confirmado',
+                        'Completed' => 'Realizada',
+                        default => $state,
+                    })
                     ->color(fn (string $state): string => match ($state) {
                         'Scheduled' => 'warning',
                         'Confirmed' => 'info',

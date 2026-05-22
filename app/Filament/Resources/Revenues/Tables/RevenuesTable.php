@@ -18,35 +18,89 @@ class RevenuesTable
         return $table
             ->columns([
                 TextColumn::make('clinic.name')
-                    ->searchable(),
+                    ->label('Clínica')
+                    ->badge()
+                    ->color('info')
+                    ->searchable()
+                    ->visible(fn () => filament()->getCurrentPanel()->getId() === 'admin'),
+
                 TextColumn::make('customer.name')
-                    ->searchable(),
+                    ->label('Paciente')
+                    ->searchable()
+                    ->sortable()
+                    ->weight('bold'),
+
+                TextColumn::make('description')
+                    ->label('Descrição / Origem')
+                    ->searchable()
+                    ->sortable()
+                    ->wrap()
+                    ->color('gray'),
+
                 TextColumn::make('total_amount')
-                    ->numeric()
-                    ->sortable(),
+                    ->label('Valor Total')
+                    ->money('BRL')
+                    ->sortable()
+                    ->color('success')
+                    ->weight('bold'),
+
                 TextColumn::make('installments')
-                    ->numeric()
+                    ->label('Parcelas')
+                    ->formatStateUsing(fn ($state) => $state . 'x')
+                    ->badge()
+                    ->color('gray')
                     ->sortable(),
+
                 TextColumn::make('installment_amount')
-                    ->numeric()
-                    ->sortable(),
+                    ->label('Valor da Parcela')
+                    ->money('BRL')
+                    ->sortable()
+                    ->color('gray')
+                    ->toggleable(isToggledHiddenByDefault: false),
+
                 TextColumn::make('payment_plan')
-                    ->searchable(),
+                    ->label('Forma de Pag.')
+                    ->searchable()
+                    ->badge()
+                    ->color('info'),
+
                 TextColumn::make('status')
+                    ->label('Situação')
+                    ->badge()
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'paid' => 'Pago',
+                        'pending' => 'Pendente',
+                        'cancelled' => 'Cancelado',
+                        'refunded' => 'Estornado',
+                        default => ucfirst($state),
+                    })
+                    ->color(fn (string $state): string => match ($state) {
+                        'paid' => 'success',
+                        'pending' => 'warning',
+                        'cancelled', 'refunded' => 'danger',
+                        default => 'gray',
+                    })
                     ->searchable(),
+
                 TextColumn::make('created_at')
-                    ->dateTime()
+                    ->label('Data do Faturamento')
+                    ->dateTime('d/m/Y H:i')
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: false),
+
                 TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->label('Registrado em')
+                    ->dateTime('d/m/Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('deleted_at')
-                    ->dateTime()
+                    ->label('Excluído em')
+                    ->dateTime('d/m/Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 TrashedFilter::make(),
             ])

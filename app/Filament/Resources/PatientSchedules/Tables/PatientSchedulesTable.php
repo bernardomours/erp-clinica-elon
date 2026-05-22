@@ -10,8 +10,12 @@ use Filament\Forms\Components\TextInput;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
 use Filament\Actions\EditAction;
+use App\Models\ProductConsumption;
+use App\Models\Procedure;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use App\Models\PatientSchedule;
+use Filament\Forms\Components\DateTimePicker;
 
 class PatientSchedulesTable
 {
@@ -35,9 +39,16 @@ class PatientSchedulesTable
                     ->dateTime('d/m/Y H:i')
                     ->sortable(),
                 
-                TextColumn::make('procedure.name')
+                TextColumn::make('procedure_id')
                     ->label('Procedimento')
-                    ->searchable()
+                    ->formatStateUsing(function ($state) {
+                        if (!$state) return 'Não definido';
+                        
+                        $procedimento = Procedure::find($state);
+                        return $procedimento ? $procedimento->name : 'Procedimento apagado';
+                    })
+                    ->badge()
+                    ->color('info')
                     ->sortable(),
                 
                 TextColumn::make('status')
@@ -72,16 +83,46 @@ class PatientSchedulesTable
                 //
             ])
             ->recordActions([
+
+                Action::make('agendar_retorno')
+                    ->label('Retorno')
+                    ->icon('heroicon-o-calendar-days')
+                    ->color('success')
+                    ->visible(fn (PatientSchedule $record) => $record->status === 'Completed' || $record->status === 'Realizada') 
+                    ->form([
+                        DateTimePicker::make('new_date')
+                            ->label('Data do Retorno')
+                            ->required()
+                            ->default(now()->addMonths(6)), 
+                    ])
+                    ->modalHeading('Agendar Retorno do Paciente')
+                    ->modalDescription('Escolha a data e horário para a nova consulta de retorno. Os dados do paciente e procedimento serão copiados.')
+                    ->modalSubmitActionLabel('Agendar')
+                    ->action(function (PatientSchedule $record, array $data) {
+                        $novoRetorno = $record->replicate(); 
+                        
+                        $novoRetorno->schedule_date = $data['new_date'];
+                        
+                        $novoRetorno->status = 'Scheduled'; 
+                        
+                        $novoRetorno->save();
+
+                        Notification::make()
+                            ->title('Retorno agendado com sucesso!')
+                            ->success()
+                            ->send();
+                    }),
+
                 EditAction::make(),
 
                 Action::make('faturar')
-                    ->label('Faturar')
-                    ->icon('heroicon-m-currency-dollar')
+                    ->label('Faturar e Finalizar')
+                    ->icon('heroicon-m-check-circle')
                     ->color('success')
                     ->requiresConfirmation()
-                    ->modalHeading('Faturar Consulta')
-                    ->modalDescription('Confirme a forma de pagamento e parcelamento deste procedimento.')
-                    ->visible(fn ($record) => $record->procedure_id !== null)
+                    ->modalHeading('Finalizar Consulta')
+                    ->modalDescription('Isto irá gerar as cobranças no financeiro e dar baixa automática nos materiais utilizados.')
+                    ->visible(fn ($record) => $record->procedure_id !== null && !in_array($record->status, ['Completed', 'Cancelled']))
                     ->form([
                         Select::make('payment_plan')
                             ->label('Plano de Pagamento')
@@ -107,8 +148,8 @@ class PatientSchedulesTable
 
                         if (!$procedimento) {
                             Notification::make()
-                                ->title('Erro ao Faturar')
-                                ->body('O procedimento vinculado a esta consulta não foi encontrado ou foi apagado.')
+                                ->title('Erro ao Finalizar')
+                                ->body('O procedimento vinculado a esta consulta não foi encontrado.')
                                 ->danger()
                                 ->send();
                             return; 
@@ -126,10 +167,56 @@ class PatientSchedulesTable
                             'installment_amount' => $valorParcela,
                             'payment_plan' => $data['payment_plan'],
                             'status' => 'paid',
+                            'description' => "Procedimento: {$procedimento->name}",
                         ]);
 
+                        $materiaisConsumidos = $procedimento->procedureProducts;
+
+                        $produtosZerados = []; 
+
+                        foreach ($materiaisConsumidos as $itemPivo) {
+                            $produto = $itemPivo->product;
+                            
+                            if ($produto) {
+                                ProductConsumption::create([
+                                    'clinic_id' => $record->clinic_id,
+                                    'product_id' => $produto->id,
+                                    'user_id' => auth()->id(),
+                                    'patient_schedule_id' => $record->id,
+                                    'quantity' => $itemPivo->quantity,
+                                    'consumption_date' => now(),
+                                    'notes' => "Baixa automática via procedimento: {$procedimento->name}",
+                                ]);
+
+                                $novoEstoque = $produto->current_stock - $itemPivo->quantity;
+                                
+                                $produto->decrement('current_stock', $itemPivo->quantity);
+                                
+                                if ($novoEstoque <= 0) {
+                                    $produtosZerados[] = $produto->name;
+                                }
+                            }
+                        }
+
                         $record->update(['status' => 'Completed']);
-                    })
+
+                        Notification::make()
+                            ->title('Sucesso Absoluto!')
+                            ->body('Consulta faturada e estoque atualizado.')
+                            ->success()
+                            ->send();
+                            
+                        if (!empty($produtosZerados)) {
+                            $nomesDosProdutos = implode(', ', $produtosZerados);
+                            
+                            Notification::make()
+                                ->title('Atenção: Estoque Zerado/Negativo!')
+                                ->body("O(s) produto(s) a seguir esgotaram após este atendimento: **{$nomesDosProdutos}**. Por favor, solicite a compra!")
+                                ->warning()
+                                ->persistent()
+                                ->send();
+                        }
+                    }),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

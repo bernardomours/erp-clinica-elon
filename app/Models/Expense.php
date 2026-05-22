@@ -15,10 +15,10 @@ class Expense extends Model
     protected $fillable = [
         'clinic_id',
         'supplier_id',
-        'financial_category_id', // Novo relacionamento
-        'description',           // Novo
-        'due_date',              // Novo
-        'payment_date',          // Novo
+        'financial_category_id',
+        'description',           
+        'due_date',              
+        'payment_date',          
         'total_amount',
         'installments',
         'installment_amount',

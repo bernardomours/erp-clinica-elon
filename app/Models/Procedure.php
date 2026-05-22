@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Procedure extends Model
 {
@@ -22,5 +23,17 @@ class Procedure extends Model
     public function clinic(): BelongsTo
     {
         return $this->belongsTo(Clinic::class);
+    }
+
+    public function products(): BelongsToMany
+    {
+        return $this->belongsToMany(Product::class)
+                    ->withPivot('quantity')
+                    ->withTimestamps();
+    }
+
+    public function procedureProducts()
+    {
+        return $this->hasMany(ProcedureProduct::class);
     }
 }
