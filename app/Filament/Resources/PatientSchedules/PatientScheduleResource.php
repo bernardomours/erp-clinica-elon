@@ -75,4 +75,11 @@ class PatientScheduleResource extends Resource
             'edit' => EditPatientSchedule::route('/{record}/edit'),
         ];
     }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::whereDate('schedule_date', today())
+            ->where('status', 'Scheduled')
+            ->count() ?: null;
+    }
 }

@@ -47,4 +47,18 @@ class Clinic extends Model
 
         return now()->startOfDay()->lte($this->expires_at);
     }
+
+    public function currentMonthExpenses()
+    {
+        return $this->hasMany(Expense::class)
+                    ->whereBetween('due_date', [now()->startOfMonth(), now()->endOfMonth()])
+                    ->orderBy('due_date', 'desc');
+    }
+
+    public function currentMonthRevenues()
+    {
+        return $this->hasMany(Revenue::class) 
+                    ->whereBetween('created_at', [now()->startOfMonth(), now()->endOfMonth()])
+                    ->orderBy('created_at', 'desc');
+    }
 }

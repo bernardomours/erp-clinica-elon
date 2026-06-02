@@ -32,6 +32,8 @@ class Customer extends Model
         'city',
         'state',
         'is_active',
+        'odontogram_state',
+        'responsible_id',
     ];
 
     /**
@@ -45,6 +47,7 @@ class Customer extends Model
             'id' => 'integer',
             'birth_date' => 'date',
             'is_active' => 'boolean',
+            'odontogram_state' => 'array',
         ];
     }
 
@@ -56,5 +59,15 @@ class Customer extends Model
     public function revenues(): HasMany
     {
         return $this->hasMany(Revenue::class);
+    }
+
+    public function patientSchedules(): HasMany
+    {
+        return $this->hasMany(PatientSchedule::class);
+    }
+
+    public function responsible()
+    {
+        return $this->belongsTo(Customer::class, 'responsible_id');
     }
 }

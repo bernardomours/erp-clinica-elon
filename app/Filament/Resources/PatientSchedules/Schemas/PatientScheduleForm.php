@@ -7,6 +7,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Schemas\Schema;
 use App\Models\Procedure;
+use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Builder;
 use App\Models\PatientSchedule;
 
@@ -32,10 +33,12 @@ class PatientScheduleForm
                 Select::make('procedure_id')
                     ->label('Procedimento')
                     ->options(function () {
-                        $tenant = filament()->getTenant();
+                        $tenant = Filament::getTenant();
+                        
                         if ($tenant) {
                             return Procedure::where('clinic_id', $tenant->id)->pluck('name', 'id');
                         }
+                        
                         return Procedure::pluck('name', 'id');
                     })
                     ->searchable()

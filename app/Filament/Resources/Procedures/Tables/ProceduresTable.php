@@ -11,6 +11,7 @@ use Filament\Actions\Action;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Tables\Table;
+use Filament\Facades\Filament;
 
 class ProceduresTable
 {
@@ -22,7 +23,7 @@ class ProceduresTable
                     ->label('Clínica')
                     ->searchable()
                     ->sortable()
-                    ->visible(fn () => filament()->getCurrentPanel()->getId() === 'admin'),
+                    ->visible(fn () => Filament::getCurrentPanel()->getId() === 'admin'),
 
                 TextColumn::make('name')
                     ->label('Procedimento')

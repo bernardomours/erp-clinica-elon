@@ -11,13 +11,17 @@ class PatientSchedule extends Model
         'clinic_id',
         'customer_id',
         'procedure_id',
+        'tooth_number',
         'schedule_date',
         'notes',
         'status',
+        'clinical_evolution',
+        'clinical_photos',
     ];
 
     protected $casts = [
         'schedule_date' => 'datetime',
+        'clinical_photos' => 'array',
     ];
 
     public function customer(): BelongsTo
@@ -33,10 +37,5 @@ class PatientSchedule extends Model
     public function procedure(): BelongsTo
     {
         return $this->belongsTo(Procedure::class);
-    }
-
-    public function patientSchedules()
-    {
-        return $this->hasMany(PatientSchedule::class);
     }
 }

@@ -11,6 +11,7 @@ use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Filament\Facades\Filament;
 
 class CustomersTable
 {
@@ -62,7 +63,7 @@ class CustomersTable
                 TextColumn::make('clinic.name')
                     ->label('Clínica')
                     ->badge()
-                    ->visible(fn () => filament()->getCurrentPanel()->getId() === 'admin'),
+                    ->visible(fn () => Filament::getCurrentPanel()->getId() === 'admin'),
 
                 TextColumn::make('created_at')
                     ->label('Criado em')

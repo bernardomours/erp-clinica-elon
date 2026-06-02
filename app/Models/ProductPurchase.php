@@ -20,10 +20,13 @@ class ProductPurchase extends Model
         'clinic_id',
         'product_id',
         'supplier_id',
+        'unit_cost',
         'quantity',
         'total_cost',
         'purchase_date',
         'user_id',
+        'batch',           
+        'expiration_date',
     ];
 
     /**

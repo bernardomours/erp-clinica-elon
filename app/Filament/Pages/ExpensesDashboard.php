@@ -21,6 +21,11 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\SelectColumn;
 use BackedEnum;
 use UnitEnum;
+use Filament\Schemas\Components\Grid;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\Indicator;
+use Filament\Tables\Enums\FiltersLayout;
+use Filament\Tables\Filters\SelectFilter;
 
 class ExpensesDashboard extends Page implements HasTable
 {
@@ -125,7 +130,7 @@ class ExpensesDashboard extends Page implements HasTable
             ->columns([
                 TextColumn::make('due_date')
                     ->label('Vencimento')
-                    ->date('d/m'),
+                    ->date('d/m/y'),
                 TextColumn::make('description')
                     ->label('Descrição'),
                 TextColumn::make('category.name')
@@ -137,6 +142,63 @@ class ExpensesDashboard extends Page implements HasTable
                     ->label('Situação')
                     ->options(['pending' => 'Pendente', 'paid' => 'Pago']),
             ])->defaultSort('due_date', 'desc')
+            ->filters([
+                SelectFilter::make('status')
+                    ->label('Situação')
+                    ->options([
+                        'pending' => 'Pendente',
+                        'paid' => 'Pago',
+                    ])
+                    ->columnSpan(1),
+
+                SelectFilter::make('financial_category_id')
+                    ->label('Categoria')
+                    ->relationship('category', 'name', fn ($query) => $query->where('type', 'expense'))
+                    ->searchable()
+                    ->preload()
+                    ->columnSpan(1),
+
+                Filter::make('vencimento')
+                    ->columnSpan(2)
+                    ->form([
+                        Grid::make(2)->schema([
+                            DatePicker::make('from')
+                                ->label('Data Início')
+                                ->default(now()->startOfMonth()),
+                                
+                            DatePicker::make('until')
+                                ->label('Data Fim')
+                                ->default(now()->endOfMonth()),
+                        ]),
+                    ])
+                    ->query(function ($query, array $data) {
+                        return $query
+                            ->when(
+                                $data['from'],
+                                fn ($query, $date) => $query->whereDate('due_date', '>=', $date),
+                            )
+                            ->when(
+                                $data['until'],
+                                fn ($query, $date) => $query->whereDate('due_date', '<=', $date),
+                            );
+                    })
+                    ->indicateUsing(function (array $data): array {
+                        $indicators = [];
+
+                        if ($data['from'] ?? null) {
+                            $indicators[] = Indicator::make('A partir de ' . Carbon::parse($data['from'])->format('d/m/Y'))
+                                ->removeField('from');
+                        }
+
+                        if ($data['until'] ?? null) {
+                            $indicators[] = Indicator::make('Até ' . Carbon::parse($data['until'])->format('d/m/Y'))
+                                ->removeField('until');
+                        }
+
+                        return $indicators;
+                    }),
+            ],layout:FiltersLayout::AboveContent)
+            ->filtersFormColumns(4)
             ->actions([
                 //EditAction::make(),
             ]);

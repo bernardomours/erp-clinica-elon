@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Widgets;
+namespace App\Filament\App\Widgets;
 
 use App\Models\Customer;
 use Filament\Tables\Columns\TextColumn;
@@ -14,6 +14,7 @@ class MonthlyBirthdays extends TableWidget
     protected static ?string $heading = '🎂 Aniversariantes do Mês';
     
     protected static ?string $pollingInterval = null;
+    protected static bool $isDiscovered = false;
 
     protected int | string | array $columnSpan = 1;
 

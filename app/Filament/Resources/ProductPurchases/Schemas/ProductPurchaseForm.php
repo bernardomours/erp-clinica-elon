@@ -44,22 +44,19 @@ class ProductPurchaseForm
                             ->required()
                             ->live(onBlur: true)
                             ->afterStateUpdated(function ($set, $get) {
-                                // 1ª MUDANÇA AQUI: total_cost
                                 $set('total_cost', floatval($get('quantity')) * floatval($get('unit_cost')));
                             }),
 
-                        TextInput::make('unit_cost')
+                       TextInput::make('unit_cost')
                             ->label('Custo Unitário')
                             ->numeric()
                             ->prefix('R$')
                             ->required()
                             ->live(onBlur: true)
                             ->afterStateUpdated(function ($set, $get) {
-                                // 2ª MUDANÇA AQUI: total_cost
                                 $set('total_cost', floatval($get('quantity')) * floatval($get('unit_cost')));
                             }),
 
-                        // 3ª MUDANÇA AQUI: total_cost
                         TextInput::make('total_cost')
                             ->label('Valor Total (NF)')
                             ->numeric()

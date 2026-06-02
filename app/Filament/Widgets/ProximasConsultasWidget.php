@@ -3,9 +3,11 @@
 namespace App\Filament\Widgets;
 
 use App\Models\PatientSchedule;
+use App\Models\Procedure;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Facades\Filament;
 use Filament\Widgets\TableWidget as BaseWidget;
 
 class ProximasConsultasWidget extends BaseWidget
@@ -20,7 +22,8 @@ class ProximasConsultasWidget extends BaseWidget
         return $table
             ->query(
                 PatientSchedule::query()
-                    ->when(filament()->getTenant(), function ($query, $tenant) {
+                    ->with(['customer']) 
+                    ->when(Filament::getTenant(), function ($query, $tenant) {
                         return $query->where('clinic_id', $tenant->id);
                     })
                     ->where('schedule_date', '>=', now())
@@ -34,8 +37,16 @@ class ProximasConsultasWidget extends BaseWidget
                     ->description(fn ($record) => $record->schedule_date->format('H:i')),
 
                 TextColumn::make('customer.name')
-                    ->label('Paciente'),
-
+                    ->label('Paciente')
+                    ->description(function ($record) {
+                        if (!$record->procedure_id) {
+                            return 'Sem procedimento';
+                        }
+                        
+                        $procedimento = Procedure::withoutGlobalScopes()->find($record->procedure_id);
+                        
+                        return $procedimento ? $procedimento->name : 'Sem procedimento';
+                    }),
                 TextColumn::make('status')
                     ->label('Status') 
                     ->badge()

@@ -35,7 +35,7 @@ use App\Filament\Pages\DashboardFinanceiro;
 use App\Filament\Resources\Suppliers\SupplierResource;
 use App\Filament\Widgets\ProximasConsultasWidget;
 use App\Filament\Pages\Auth\CustomLogin;
-use App\Filament\Widgets\MonthlyBirthdays;
+use App\Filament\App\Widgets\MonthlyBirthdays;
 
 class AppPanelProvider extends PanelProvider
 {

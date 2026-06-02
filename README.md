@@ -1,58 +1,54 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🏥 Sistema de Gestão de Clínicas (SaaS Multi-Tenant)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Um sistema completo de gestão de clínicas e consultórios operando no modelo SaaS (Software as a Service). Desenvolvido com a TALL Stack (Tailwind, Alpine, Laravel, Livewire) e focado em alta performance, UX imersiva e automação de processos clínicos e financeiros.
 
-## About Laravel
+## 🚀 Tecnologias Utilizadas
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+* **Framework:** Laravel 11 / PHP 8.4
+* **Painel Administrativo:** FilamentPHP v3
+* **Frontend:** Livewire 3, Alpine.js, Tailwind CSS
+* **Banco de Dados:** MySQL / PostgreSQL
+* **Arquitetura:** Multi-Tenancy (Escopo global por Clínica)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 📦 Módulos Principais
 
-## Learning Laravel
+### 1. 🏢 Multi-Tenancy & Administração
+O sistema separa completamente os dados entre diferentes clínicas (Tenants), garantindo privacidade e segurança.
+* **Painel Super Admin:** Acesso exclusivo para gestão das clínicas assinantes, planos e permissões.
+* **Painéis de Clínica:** Área de trabalho isolada onde cada clínica visualiza apenas os seus dados (Pacientes, Agendamentos, Financeiro).
+* **Feature Toggling:** Módulos inteiros (como o Financeiro) são ativados ou ocultados dinamicamente com base no plano contratado pela clínica.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 2. 📅 Gestão de Agenda e Atendimentos
+Fluxo completo de receção e cadeira do profissional, com UI otimizada para produtividade.
+* **Lembretes e Dashboard:** Widgets inteligentes listando as próximas consultas do dia na tela inicial.
+* **Ciclo de Vida da Consulta:** Controle rigoroso de status (`Agendada`, `Confirmada`, `Realizada`, `Cancelada`) com indicadores visuais (badges).
+* **Filtros Avançados:** Busca assíncrona por paciente, procedimento, situação e intervalo dinâmico de datas com indicadores visuais ativos (`indicateUsing`).
+* **Agendamento de Retorno:** Ação em massa que duplica os dados clínicos e projeta um retorno automático (ex: +6 meses) com um único clique.
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 3. 💸 Faturamento Automático
+Módulo inteligente que cruza o atendimento clínico com o contas a receber.
+* **Ação de Faturamento:** Ao finalizar uma consulta, o sistema gera automaticamente a cobrança baseada no valor do procedimento.
+* **Planos de Pagamento Flexíveis:** Suporte a múltiplas formas (PIX, Boleto, Cartão de Crédito, Dinheiro e Carnê da Clínica).
+* **Parcelamento Automático:** Cálculo em tempo real do valor da parcela (`installment_amount`) com base na quantidade escolhida.
+* **Regras de Visibilidade:** O botão de faturar só aparece se o paciente tiver um procedimento vinculado, se a consulta não estiver cancelada/finalizada e se a clínica possuir o módulo ativado.
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+### 4. 📦 Controle de Estoque Integrado
+Baixa automatizada de insumos atrelada aos procedimentos clínicos.
+* **Receituário de Procedimento:** Cada procedimento (ex: Limpeza, Extração) possui uma "receita" dos materiais utilizados (`ProcedureProducts`).
+* **Baixa Silenciosa:** Ao faturar e finalizar a consulta, o sistema reduz o estoque (`current_stock`) de todos os itens vinculados ao procedimento automaticamente.
+* **Alertas Persistentes de Ruptura:** Se a baixa automática zerar ou negativar o estoque de um item, o sistema dispara uma notificação persistente (`Warning`) exigindo a atenção do utilizador para solicitação de compra.
+* **Histórico de Consumo:** Registo detalhado na tabela `ProductConsumption`, vinculando o item gasto à consulta, ao paciente e ao profissional que realizou a baixa.
 
-## Agentic Development
+### 5. 👥 Cadastro de Pacientes (Prontuário)
+* **Quick Create:** Criação de novos pacientes (nome, telefone, etc.) diretamente pelo modal de agendamento, sem necessidade de navegar para outra tela.
+* **Pesquisa Global:** Busca otimizada (`searchable` e `preload`) para encontrar pacientes em frações de segundo.
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+---
 
-```bash
-composer require laravel/boost --dev
+## 💡 Padrões de Código & Boas Práticas
 
-php artisan boost:install
-```
-
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+* **Evitando Lazy Loading:** Relacionamentos carregados estrategicamente (`with()`) para evitar N+1 queries.
+* **Bypassing Scopes Seguros:** Utilização de `withoutGlobalScopes()` apenas quando estritamente necessário (ex: carregar nomes de procedimentos isolados em colunas), mantendo a segurança do Tenant principal intacta.
+* **UX Premium:** Uso extensivo de Modais de Confirmação, Notificações Toast, Badges de Status coloridas e navegação SPA (Single Page Application).

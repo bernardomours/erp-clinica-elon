@@ -9,6 +9,7 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Facades\Filament;
 
 class FinancialCategoriesTable
 {
@@ -17,7 +18,8 @@ class FinancialCategoriesTable
         return $table
             ->columns([
                 TextColumn::make('clinic.name')
-                    ->searchable(),
+                    ->searchable()
+                    ->visible(fn () => Filament::getCurrentPanel()->getId() === 'admin'),
                 TextColumn::make('name')
                     ->label('Nome')
                     ->searchable(),

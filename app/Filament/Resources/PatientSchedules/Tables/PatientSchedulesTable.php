@@ -16,6 +16,14 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use App\Models\PatientSchedule;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Facades\Filament;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Enums\FiltersLayout;
+use Illuminate\Database\Eloquent\Builder;
+use Filament\Forms\Components\DatePicker;
+use Filament\Tables\Filters\Filter;
+use Illuminate\Support\Carbon;
+use Filament\Schemas\Components\Grid;
 
 class PatientSchedulesTable
 {
@@ -27,7 +35,7 @@ class PatientSchedulesTable
                     ->label('Clínica')
                     ->badge()
                     ->color('info')
-                    ->visible(fn () => filament()->getCurrentPanel()->getId() === 'admin'),
+                    ->visible(fn () => Filament::getCurrentPanel()->getId() === 'admin'),
                 
                 TextColumn::make('customer.name')
                     ->label('Paciente')
@@ -56,14 +64,12 @@ class PatientSchedulesTable
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => match ($state) {
                         'Scheduled' => 'Agendada',
-                        'Confirmed' => 'Confirmada',
                         'Completed' => 'Realizada',
                         'Cancelled' => 'Cancelada',
                         default => $state,
                     })
                     ->color(fn (string $state): string => match ($state) {
                         'Scheduled' => 'warning',
-                        'Confirmed' => 'info',
                         'Completed' => 'success',
                         'Cancelled' => 'danger',
                         default => 'gray',
@@ -79,11 +85,59 @@ class PatientSchedulesTable
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->defaultSort('schedule_date', 'desc')
             ->filters([
-                //
-            ])
-            ->recordActions([
+                SelectFilter::make('customer')
+                    ->relationship('customer', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->label('Paciente'),
 
+                SelectFilter::make('status')
+                    ->label('Situação')
+                    ->options([
+                        'Scheduled' => 'Agendada',
+                        'Completed' => 'Realizada',
+                        'Cancelled' => 'Cancelada',
+                    ]),
+
+                Filter::make('schedule_date')
+                    ->form([
+                        DatePicker::make('created_from')
+                            ->label('Data Inicial'),
+                        DatePicker::make('created_until')
+                            ->label('Data Final'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['created_from'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('schedule_date', '>=', $date),
+                            )
+                            ->when(
+                                $data['created_until'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('schedule_date', '<=', $date),
+                            );
+                    })
+                    ->indicateUsing(function (array $data): array {
+                        $indicators = [];
+
+                        if ($data['created_from'] ?? null) {
+                            $indicators[] = \Filament\Tables\Filters\Indicator::make('A partir de ' . Carbon::parse($data['created_from'])->format('d/m/Y'))
+                                ->removeField('created_from');
+                        }
+
+                        if ($data['created_until'] ?? null) {
+                            $indicators[] = \Filament\Tables\Filters\Indicator::make('Até ' . Carbon::parse($data['created_until'])->format('d/m/Y'))
+                                ->removeField('created_until');
+                        }
+
+                        return $indicators;
+                    }),
+                    
+            ],layout: FiltersLayout::AboveContent)
+
+            ->recordActions([
                 Action::make('agendar_retorno')
                     ->label('Retorno')
                     ->icon('heroicon-o-calendar-days')
@@ -122,7 +176,19 @@ class PatientSchedulesTable
                     ->requiresConfirmation()
                     ->modalHeading('Finalizar Consulta')
                     ->modalDescription('Isto irá gerar as cobranças no financeiro e dar baixa automática nos materiais utilizados.')
-                    ->visible(fn ($record) => $record->procedure_id !== null && !in_array($record->status, ['Completed', 'Cancelled']))
+                    ->visible(function ($record): bool {
+                        $isAptoParaFaturar = $record->procedure_id !== null && !in_array($record->status, ['Completed', 'Cancelled']);
+                        
+                        if (!$isAptoParaFaturar) {
+                            return false;
+                        }
+
+                        if (filament()->getCurrentPanel()->getId() === 'admin') {
+                            return true;
+                        }
+                        
+                        return (bool) filament()->getTenant()?->has_financial;
+                    })
                     ->form([
                         Select::make('payment_plan')
                             ->label('Plano de Pagamento')

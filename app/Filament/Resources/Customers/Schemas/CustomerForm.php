@@ -13,6 +13,10 @@ use Filament\Support\RawJs;
 use Filament\Forms\Set;
 use Illuminate\Support\Facades\Http;
 use Filament\Schemas\Schema;
+use Filament\Facades\Filament;
+use Filament\Schemas\Components\Utilities\Get;
+use Illuminate\Support\Carbon;
+use App\Rules\CpfCnpjRule;
 
 class CustomerForm
 {
@@ -30,8 +34,8 @@ class CustomerForm
                                 Select::make('clinic_id')
                                     ->relationship('clinic', 'name')
                                     ->label('Clínica')
-                                    ->visible(fn () => filament()->getCurrentPanel()->getId() === 'admin')
-                                    ->required(fn () => filament()->getCurrentPanel()->getId() === 'admin'),
+                                    ->visible(fn () => Filament::getCurrentPanel()->getId() === 'admin')
+                                    ->required(fn () => Filament::getCurrentPanel()->getId() === 'admin'),
                                 TextInput::make('name')
                                     ->label('Nome Completo')
                                     ->required()
@@ -44,6 +48,7 @@ class CustomerForm
                                     ->mask(RawJs::make(<<<'JS'
                                         $input.length > 14 ? '99.999.999/9999-99' : '999.999.999-99'
                                     JS))
+                                    ->rule(new CpfCnpjRule())
                                     ->unique(ignoreRecord: true)
                                     ->validationMessages([
                                         'unique' => 'Esse CPF ou CNPJ já está cadastrado.'
@@ -51,23 +56,66 @@ class CustomerForm
                                     
                                 DatePicker::make('birth_date')
                                     ->label('Data de Nascimento')
-                                    ->displayFormat('d/m/Y'),
+                                    ->displayFormat('d/m/Y')
+                                    ->live(debounce:500),
                                     
                                 TextInput::make('phone')
                                     ->label('Telefone/WhatsApp')
-                                    ->mask('(99) 99999-9999')
-                                    ->tel()
-                                    ->required(),
+                                    ->required() 
+                                    ->visible(function (Get $get) {
+                                        $birthDate = $get('birth_date');
+                                        if (!$birthDate) return true;
+                                        return Carbon::parse($birthDate)->age >= 18;
+                                    }),
 
                                 TextInput::make('email')
-                                        ->label('Email')
-                                        ->nullable(),
+                                    ->label('Email')
+                                    ->email()
+                                    ->visible(function (Get $get) {
+                                        $birthDate = $get('birth_date');
+                                        if (!$birthDate) return true;
+                                        
+                                        return Carbon::parse($birthDate)->age >= 18;
+                                    }),
                             ]),
                             
                             Toggle::make('is_active')
                                 ->label('Cadastro Ativo?')
                                 ->default(true)
                                 ->inline(false),
+                        ]),
+                    Step::make('Responsável Legal')
+                        ->icon('heroicon-o-users')
+                        ->description('Obrigatório para menores de 18 anos')
+                        ->visible(function (Get $get) {
+                            $birthDate = $get('birth_date');
+                            if (!$birthDate) return false;
+                            
+                            return Carbon::parse($birthDate)->age < 18;
+                        })
+                        ->schema([
+                            Select::make('responsible_id')
+                                ->label('Selecione ou Cadastre o Responsável')
+                                ->relationship('responsible', 'name')
+                                ->searchable()
+                                ->preload()
+                                ->required()
+                                ->createOptionForm([
+                                    TextInput::make('name')
+                                        ->label('Nome do Responsável')
+                                        ->required(),
+                                    TextInput::make('cpf')
+                                        ->label('CPF do Responsável')
+                                        ->mask('999.999.999-99')
+                                        ->required(),
+                                    TextInput::make('phone')
+                                        ->label('Telefone/WhatsApp')
+                                        ->mask('(99) 99999-9999')
+                                        ->required(),
+                                    TextInput::make('email')
+                                        ->label('Email')
+                                        ->nullable(),
+                                ]),
                         ]),
 
                     Step::make('Adress')
@@ -84,17 +132,14 @@ class CustomerForm
                                     ->afterStateUpdated(function ($set, ?string $state) {
                                         if (blank($state)) return;
 
-                                        // Remove o traço para consultar a API
                                         $cep = preg_replace('/[^0-9]/', '', $state);
                                         if (strlen($cep) !== 8) return;
 
-                                        // Consulta a API do ViaCEP
                                         $response = Http::get("https://viacep.com.br/ws/{$cep}/json/");
 
                                         if ($response->successful() && !isset($response['erro'])) {
                                             $data = $response->json();
                                             
-                                            // Preenche os outros campos instantaneamente
                                             $set('street', $data['logradouro'] ?? null);
                                             $set('neighborhood', $data['bairro'] ?? null);
                                             $set('city', $data['localidade'] ?? null);

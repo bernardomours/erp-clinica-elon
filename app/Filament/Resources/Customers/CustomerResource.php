@@ -43,7 +43,8 @@ class CustomerResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\PatientSchedulesRelationManager::class,
+            RelationManagers\OdontogramRelationManager::class,
         ];
     }
 

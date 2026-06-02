@@ -22,7 +22,12 @@ class CreateProductPurchase extends CreateRecord
         // 1. MAGIA DE ESTOQUE: Soma a quantidade comprada ao estoque atual do produto
         $product = Product::find($purchase->product_id);
         if ($product) {
-            $product->increment('current_stock', $purchase->quantity);
+            $product->update([
+                'current_stock' => $product->current_stock + $purchase->quantity,
+                'unit_cost' => $formData['unit_cost'] ?? $product->unit_cost,
+                'batch' => $formData['batch'] ?? $product->batch,
+                'expiration_date' => $formData['expiration_date'] ?? $product->expiration_date,
+            ]);
         }
 
         // 2. MAGIA FINANCEIRA: Cria a Despesa

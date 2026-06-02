@@ -12,13 +12,13 @@ use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Filament\Facades\Filament;
 
 class EquipeModal extends Component implements HasActions, HasForms
 {
     use InteractsWithActions;
     use InteractsWithForms;
 
-    // Fica "escutando" esse comando para abrir a janela
     #[On('abrirModalEquipe')]
     public function triggerModal(): void
     {
@@ -37,7 +37,7 @@ class EquipeModal extends Component implements HasActions, HasForms
                     ->label('Equipe')
                     ->getStateUsing(function () {
                         return User::whereHas('clinics', function ($query) {
-                            $query->where('clinics.id', filament()->getTenant()->id);
+                            $query->where('clinics.id', Filament::getTenant()->id);
                         })->get();
                     })
                     ->schema([

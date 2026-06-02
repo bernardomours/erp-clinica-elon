@@ -10,6 +10,8 @@ use Filament\Actions\RestoreBulkAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
+use Filament\Facades\Filament;
+
 
 class RevenuesTable
 {
@@ -22,7 +24,7 @@ class RevenuesTable
                     ->badge()
                     ->color('info')
                     ->searchable()
-                    ->visible(fn () => filament()->getCurrentPanel()->getId() === 'admin'),
+                    ->visible(fn () => Filament::getCurrentPanel()->getId() === 'admin'),
 
                 TextColumn::make('customer.name')
                     ->label('Paciente')

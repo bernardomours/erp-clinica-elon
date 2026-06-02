@@ -23,9 +23,6 @@ class Product extends Model
         'minimum_stock',
         'unit',
         'current_stock',
-        'batch',
-        'expiration_date',
-        'unit_cost',
     ];
 
     /**
