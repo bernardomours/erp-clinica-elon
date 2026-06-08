@@ -1,7 +1,7 @@
 <x-mail::message>
 # Olá, Doutor(a)!
 
-Este é um lembrete automático do **OdontoFlow** para ajudar no planejamento da sua agenda. Existe um atendimento agendado para daqui a **7 dias**.
+Este é um lembrete automático do **Odontys** para ajudar no planejamento da sua agenda. Existe um atendimento agendado para daqui a **7 dias**.
 
 ### 📋 Detalhes do Agendamento:
 * **Paciente:** {{ $nomePaciente }}

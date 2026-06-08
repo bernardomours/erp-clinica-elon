@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -321,7 +321,7 @@
 
             <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto items-start">
                 
-                <div class="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm">
+                <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-2">
                     <h3 class="text-xl font-bold text-gray-900 mb-2">Básico</h3>
                     <p class="text-gray-500 text-sm mb-6">Agenda e Cadastro</p>
                     <div class="text-3xl font-bold text-[#082f49] mb-1">R$ 90,00<span class="text-base font-normal text-gray-500">/mês</span></div>
@@ -333,7 +333,7 @@
                     <button onclick="toggleModal('Básico')" class="w-full border border-[#0ea5e9] text-[#0ea5e9] font-semibold py-3 rounded-xl hover:bg-blue-50 transition-colors">Escolher</button>
                 </div>
 
-                <div class="bg-white rounded-2xl p-8 border-2 border-[#0ea5e9] shadow-lg">
+                <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-2">
                     <h3 class="text-xl font-bold text-gray-900 mb-2">Financeiro</h3>
                     <p class="text-gray-500 text-sm mb-6">Foco total no lucro</p>
                     <div class="text-3xl font-bold text-[#082f49] mb-1">R$ 70,00<span class="text-base font-normal text-gray-500">/mês</span></div>
@@ -345,7 +345,7 @@
                     <button onclick="toggleModal('Financeiro')" class="w-full bg-[#0ea5e9] text-white font-semibold py-3 rounded-xl hover:bg-[#0284c7]">Escolher</button>
                 </div>
 
-                <div class="bg-[#082f49] rounded-2xl p-8 border border-[#0ea5e9] shadow-2xl text-white">
+                <div class="bg-[#082f49] rounded-2xl border p-8 text-white border-gray-100 shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-2">
                     <h3 class="text-xl font-bold mb-2">Profissional</h3>
                     <p class="text-blue-200 text-sm mb-6">A solução completa</p>
                     <div class="text-3xl font-bold mb-1">R$ 167,00<span class="text-base font-normal text-blue-300">/mês</span></div>

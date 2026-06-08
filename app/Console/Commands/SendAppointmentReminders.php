@@ -10,7 +10,7 @@ use Illuminate\Support\Carbon;
 
 class SendAppointmentReminders extends Command
 {
-    protected $signature = 'odontoflow:send-reminders';
+    protected $signature = 'odontys:send-reminders';
     protected $description = 'Envia e-mail de lembrete para os líderes (clinic_admin) sobre consultas daqui a 7 dias';
 
     public function handle()
@@ -32,14 +32,6 @@ class SendAppointmentReminders extends Command
         }
 
         foreach ($agendamentos as $schedule) {
-            
-            // // --- INÍCIO DO RAIO-X (Vai imprimir no terminal!) ---
-            // $this->info("=== TESTE DE AGENDAMENTO ===");
-            // $this->info("ID do Agendamento: " . $schedule->id);
-            // $this->info("ID do Proc. Salvo: " . ($schedule->procedure_id ?? 'NULO (O formulário não guardou!)'));
-            // $this->info("Nome do Proc.: " . ($schedule->procedure?->name ?? 'NULO (A Relação ou o Scope falhou!)'));
-            // $this->info("============================");
-            // // --- FIM DO RAIO-X ---
             
             if ($schedule->clinic) {
                 $lideresDaClinica = $schedule->clinic->users()->where('role', 'clinic_admin')->get();
