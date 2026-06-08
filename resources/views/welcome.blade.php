@@ -121,7 +121,7 @@
                     <div class="w-3 h-3 rounded-full bg-amber-400"></div>
                     <div class="w-3 h-3 rounded-full bg-green-400"></div>
                     <div class="ml-4 bg-white border border-gray-200 rounded text-xs text-gray-400 px-3 py-1 font-mono w-64 text-left">
-                        app.odontys.com.br
+                        odontys.com.br
                     </div>
                 </div>
                 

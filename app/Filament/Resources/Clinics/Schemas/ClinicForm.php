@@ -70,6 +70,8 @@ class ClinicForm
                         TextInput::make('zip_code')
                             ->label('CEP')
                             ->mask('99999-999')
+                            ->dehydrateStateUsing(fn ($state) => str_replace('-', '', $state))
+                            ->maxLength(9)
                             ->live(onBlur: true)
                             ->afterStateUpdated(function ($set, $state) {
                                 if (!$state) return;

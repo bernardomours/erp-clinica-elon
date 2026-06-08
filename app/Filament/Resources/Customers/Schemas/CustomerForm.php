@@ -128,6 +128,7 @@ class CustomerForm
                                     ->label('CEP')
                                     ->required()
                                     ->mask('99999-999')
+                                    ->dehydrateStateUsing(fn ($state) => str_replace('-', '', $state)) 
                                     ->live(onBlur: true)
                                     ->afterStateUpdated(function ($set, ?string $state) {
                                         if (blank($state)) return;
