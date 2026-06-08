@@ -33,7 +33,7 @@ class AppointmentReminderMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: '🔔 Lembrete: Consulta marcada para daqui a 7 dias',
+            subject: '🔔 Lembrete: Consultas marcadas nos próximos 7 dias',
         );
     }
 
