@@ -3,7 +3,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Odontys - Gestão de Clínicas</title>
+    <title>Odontys - Gestão Completa para a sua clínica</title>
+
+    <link rel="icon" href="{{ asset('images/favicon.png') }}" type="image/png">
 
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700|playfair-display:600,700" rel="stylesheet" />
@@ -53,32 +55,34 @@
         </script>
 @endif
 
-    <header class="container mx-auto px-6 py-6 flex items-center justify-between">
-        <div class="flex items-center gap-3">
-            <img src="{{ asset('images/topbar_icon.png') }}" 
-                 alt="Logo Odontys" 
-                 class="h-16 w-auto object-contain mix-blend-multiply">
-        </div>
+    <header class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm transition-all">
+        <div class="container mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <img src="{{ asset('images/topbar_icon.png') }}" 
+                     alt="Logo Odontys" 
+                     class="h-10 md:h-12 w-auto object-contain mix-blend-multiply">
+            </div>
 
-        <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-600">
-            <a href="#como-funciona" class="hover:text-[#0891b2] transition-colors">Como funciona</a>
-            <a href="#funcionalidades" class="hover:text-[#0891b2] transition-colors">Funcionalidades</a>
-            <a href="#financeiro" class="hover:text-[#0891b2] transition-colors">Financeiro</a>
-        </nav>
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-600">
+                <a href="#como-funciona" class="hover:text-[#0891b2] transition-colors">Como funciona</a>
+                <a href="#funcionalidades" class="hover:text-[#0891b2] transition-colors">Funcionalidades</a>
+                <a href="#financeiro" class="hover:text-[#0891b2] transition-colors">Financeiro</a>
+                <a href="#planos" class="hover:text-[#0891b2] transition-colors">Planos</a>
+            </nav>
 
-        <div class="flex items-center gap-4 text-sm font-medium">
-        
-            <button onclick="toggleModal()" class="bg-[#0ea5e9] text-white px-5 py-2.5 rounded-lg shadow-md hover:bg-[#0284c7] transition-colors flex items-center gap-2">
-                Começar agora
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
-            </button>
+            <div class="flex items-center gap-4 text-sm font-medium">
+                <button onclick="toggleModal()" class="bg-[#0ea5e9] text-white px-5 py-2.5 rounded-lg shadow-md hover:bg-[#0284c7] transition-colors flex items-center gap-2">
+                    Começar agora
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+                </button>
+            </div>
         </div>
     </header>
 
-    <main class="container mx-auto px-6 pt-16 pb-24 text-center">
+    <main class="container mx-auto px-6 pt-32 pb-24 text-center">
         <div class="inline-flex items-center gap-2 bg-blue-100/50 text-[#0284c7] border border-blue-200 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider mb-8">
             <span class="w-2 h-2 rounded-full bg-[#0ea5e9] animate-pulse"></span>
-            Plataforma Completa para Consultórios
+            Plataforma Completa para Consultórios Odontológicos
         </div>
 
         <h1 class="text-5xl md:text-7xl font-bold text-[#0f172a] tracking-tight leading-tight mb-6 max-w-4xl mx-auto">
@@ -101,11 +105,11 @@
 
         <div class="flex items-center justify-center gap-3 text-sm text-gray-500 font-medium mb-20">
             <div class="flex -space-x-2">
-                <div class="w-8 h-8 rounded-full bg-blue-500 border-2 border-white flex items-center justify-center text-white text-xs">CM</div>
+                <div class="w-8 h-8 rounded-full bg-blue-500 border-2 border-white flex items-center justify-center text-white text-xs">AF</div>
                 <div class="w-8 h-8 rounded-full bg-indigo-500 border-2 border-white flex items-center justify-center text-white text-xs">JR</div>
-                <div class="w-8 h-8 rounded-full bg-cyan-500 border-2 border-white flex items-center justify-center text-white text-xs">OD</div>
+                <div class="w-8 h-8 rounded-full bg-cyan-500 border-2 border-white flex items-center justify-center text-white text-xs">EL</div>
             </div>
-            Já usado por clínicas parceiras em beta
+            Já usado por clínicas parceiras
         </div>
 
         <div id="sistema" class="relative max-w-5xl mx-auto">
@@ -122,7 +126,6 @@
                 </div>
                 
                 <div id="carousel-container" class="aspect-[16/9] bg-gray-100 relative overflow-hidden group">
-                    
                     <div id="carousel-track" class="flex w-full h-full transition-transform duration-500 ease-out" style="transform: translateX(0%);">
                         <img src="{{ asset('images/page-dashboard.png') }}" class="w-full h-full flex-shrink-0 object-cover object-top" alt="Dashboard Financeiro">
                         <img src="{{ asset('images/page-agendamentos.png') }}" class="w-full h-full flex-shrink-0 object-cover object-top" alt="Tela de Agendamentos">
@@ -145,12 +148,11 @@
                         <button onclick="goToSlide(3)" class="indicator w-2.5 h-2.5 rounded-full bg-gray-400 transition-colors"></button>
                     </div>
                 </div>
-
             </div>
         </div>
     </main>
 
-    <section id="como-funciona" class="py-24 bg-white">
+    <section id="como-funciona" class="py-24 bg-white scroll-mt-24">
         <div class="container mx-auto px-6 max-w-6xl">
             <div class="text-center mb-16">
                 <h2 class="text-3xl md:text-4xl font-bold text-[#082f49] mb-4">Como o Odontys funciona?</h2>
@@ -187,7 +189,7 @@
         </div>
     </section>
 
-    <section id="funcionalidades" class="py-24 bg-gray-50 border-y border-gray-100">
+    <section id="funcionalidades" class="py-24 bg-gray-50 border-y border-gray-100 scroll-mt-16">
         <div class="container mx-auto px-6 max-w-6xl">
             <div class="mb-16">
                 <h2 class="text-3xl md:text-4xl font-bold text-[#082f49] mb-4">Tudo o que a sua clínica precisa</h2>
@@ -222,7 +224,7 @@
         </div>
     </section>
 
-    <section id="financeiro" class="py-24 bg-[#082f49] text-white relative overflow-hidden">
+    <section id="financeiro" class="py-24 bg-[#082f49] text-white relative overflow-hidden scroll-mt-16">
         <div class="absolute top-0 right-0 -mt-20 -mr-20 w-96 h-96 bg-[#0ea5e9] rounded-full blur-3xl opacity-20"></div>
         
         <div class="container mx-auto px-6 max-w-6xl relative z-10">
@@ -311,7 +313,70 @@
         </div>
     </section>
 
-    <div id="interestModal" class="hidden fixed inset-0 z-50 flex items-center justify-center px-4 bg-gray-900/40 backdrop-blur-sm transition-opacity">
+    <section id="planos" class="py-24 bg-gray-50 scroll-mt-16">
+        <div class="container mx-auto px-6 max-w-6xl">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-[#082f49] mb-4">Planos simples e transparentes</h2>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto items-start">
+                
+                <div class="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm">
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Básico</h3>
+                    <p class="text-gray-500 text-sm mb-6">Agenda e Cadastro</p>
+                    <div class="text-3xl font-bold text-[#082f49] mb-1">R$ 90,00<span class="text-base font-normal text-gray-500">/mês</span></div>
+                    <p class="text-emerald-600 text-xs font-semibold mb-6">Anual: R$ 75,00/mês</p>
+                    <ul class="text-left space-y-3 mb-8 text-gray-600 text-sm">
+                        <li class="flex items-start gap-3"><svg class="w-5 h-5 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Agenda completa</li>
+                        <li class="flex items-start gap-3"><svg class="w-5 h-5 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Prontuário e Odontograma</li>
+                    </ul>
+                    <button onclick="toggleModal('Básico')" class="w-full border border-[#0ea5e9] text-[#0ea5e9] font-semibold py-3 rounded-xl hover:bg-blue-50 transition-colors">Escolher</button>
+                </div>
+
+                <div class="bg-white rounded-2xl p-8 border-2 border-[#0ea5e9] shadow-lg">
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Financeiro</h3>
+                    <p class="text-gray-500 text-sm mb-6">Foco total no lucro</p>
+                    <div class="text-3xl font-bold text-[#082f49] mb-1">R$ 70,00<span class="text-base font-normal text-gray-500">/mês</span></div>
+                    <p class="text-emerald-600 text-xs font-semibold mb-6">Anual: R$ 58,00/mês</p>
+                    <ul class="text-left space-y-3 mb-8 text-gray-600 text-sm">
+                        <li class="flex items-start gap-3"><svg class="w-5 h-5 text-[#0ea5e9] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Fluxo de caixa</li>
+                        <li class="flex items-start gap-3"><svg class="w-5 h-5 text-[#0ea5e9] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Controle de estoque</li>
+                    </ul>
+                    <button onclick="toggleModal('Financeiro')" class="w-full bg-[#0ea5e9] text-white font-semibold py-3 rounded-xl hover:bg-[#0284c7]">Escolher</button>
+                </div>
+
+                <div class="bg-[#082f49] rounded-2xl p-8 border border-[#0ea5e9] shadow-2xl text-white">
+                    <h3 class="text-xl font-bold mb-2">Profissional</h3>
+                    <p class="text-blue-200 text-sm mb-6">A solução completa</p>
+                    <div class="text-3xl font-bold mb-1">R$ 167,00<span class="text-base font-normal text-blue-300">/mês</span></div>
+                    <p class="text-emerald-400 text-xs font-semibold mb-6">Anual: R$ 133,66/mês</p>
+                    <ul class="text-left space-y-3 mb-8 text-blue-100 text-sm">
+                        <li class="flex items-start gap-3"><svg class="w-5 h-5 text-[#0ea5e9] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Agenda + Financeiro</li>
+                        <li class="flex items-start gap-3"><svg class="w-5 h-5 text-[#0ea5e9] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Relatórios Avançados</li>
+                    </ul>
+                    <button onclick="toggleModal('Profissional')" class="w-full border border-[#0ea5e9] text-[#0ea5e9] font-semibold py-3 rounded-xl hover:bg-blue-50 transition-colors">Escolher</button>
+                </div>
+            </div>
+            
+            <div class="mt-12 text-center text-gray-500 text-sm italic">
+                * Taxa única de implementação: R$ 250,00 (Treinamento e configuração).
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 bg-gradient-to-r from-[#082f49] to-[#0ea5e9] text-center text-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl md:text-4xl font-bold mb-6">Pronto para transformar sua clínica?</h2>
+            <p class="text-blue-100 mb-10 max-w-xl mx-auto text-lg">
+                Não deixe para amanhã a organização que sua clínica precisa hoje. Clique abaixo e fale com nossa equipe.
+            </p>
+            <button onclick="toggleModal()" class="bg-white text-[#082f49] font-bold px-10 py-4 rounded-xl text-lg hover:bg-gray-100 transition-all shadow-xl hover:scale-105">
+                Estou interessado!
+            </button>
+        </div>
+    </section>
+
+    <div id="interestModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center px-4 bg-gray-900/40 backdrop-blur-sm transition-opacity">
         <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full relative p-8 border border-gray-100">
             
             <button onclick="toggleModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 text-2xl leading-none transition-colors">
@@ -320,7 +385,7 @@
             
             <div class="mb-6">
                 <h2 class="text-2xl font-bold text-gray-900 mb-1">Fale Conosco</h2>
-                <p class="text-sm text-gray-500">Deixe seus dados e entraremos em contato para apresentar o sistema.</p>
+                <p class="text-sm text-gray-500">Deixe seus dados e entraremos em contato para apresentar o sistema e os planos.</p>
             </div>
             
             <form action="/leads" method="POST" class="flex flex-col gap-4">
@@ -337,6 +402,16 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">Telefone / WhatsApp</label>
                     <input type="tel" name="phone" required class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-[#0ea5e9] focus:border-[#0ea5e9] outline-none transition-all">
                 </div>
+
+                <input type="hidden" id="planoEscolhido" name="plano">
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Como prefere pagar?</label>
+                    <select name="periodo" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-[#0ea5e9] outline-none">
+                        <option value="Mensal">Mensal</option>
+                        <option value="Anual">Anual</option>
+                    </select>
+                </div>
                 
                 <button type="submit" class="mt-4 w-full bg-[#2563eb] hover:bg-[#1d4ed8] text-white py-3 rounded-xl font-semibold transition-all shadow-md hover:shadow-lg">
                     Solicitar Demonstração
@@ -346,10 +421,16 @@
     </div>
 
     <script>
-        function toggleModal() {
-            const modal = document.getElementById('interestModal');
-            modal.classList.toggle('hidden');
+        function toggleModal(plano = null) {
+        const modal = document.getElementById('interestModal');
+        const inputPlano = document.getElementById('planoEscolhido');
+        
+        if (plano) {
+            inputPlano.value = plano;
         }
+        
+        modal.classList.toggle('hidden');
+    }
 
         let currentSlide = 0;
         const track = document.getElementById('carousel-track');

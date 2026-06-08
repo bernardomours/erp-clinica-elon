@@ -10,12 +10,14 @@ Route::get('/', function () {
 
 Route::post('/leads', function (Request $request) {
     $validated = $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|max:255',
-        'phone' => 'required|string|max:20',
+        'name'   => 'required|string',
+        'email'  => 'required|email',
+        'phone'  => 'required|string',
+        'plano'  => 'nullable|string',
+        'periodo'=> 'required|string',
     ]);
 
     Lead::create($validated);
 
-    return redirect()->back()->with('success', 'Obrigado pelo interesse! Entraremos em contato em breve.');
+    return redirect()->back()->with('success', 'Interesse no plano ' . $request->plano . ' registrado com sucesso!');
 });
