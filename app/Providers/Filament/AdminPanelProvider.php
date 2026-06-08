@@ -28,7 +28,7 @@ class AdminPanelProvider extends PanelProvider
             ->spa()
             ->default()
             ->id('admin')
-            ->path('admin')
+            ->path('admin-panel-acess')
             ->login()
             ->colors([
                 'primary' => Color::hex('#014bde'),
